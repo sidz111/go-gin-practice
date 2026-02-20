@@ -14,22 +14,28 @@ func hello(c *gin.Context) {
 }
 
 type Student struct {
-	Name    string  `json:"name"`
+	Name    string  `json:"name" binding:"required"`
 	Address string  `json:"address"`
 	Contact string  `json:"contact"`
 	Marks   float32 `json:"marks"`
 }
 
 type Book struct {
-	Name          string `json:"name"`
-	AuthorName    string `json:"author_name"`
-	PublishedYear string `json:"published_year"`
-	Price         int    `json:"price"`
+	Name          string `json:"name" binding:"required"`
+	AuthorName    string `json:"author_name" binding:"required"`
+	PublishedYear string `json:"published_year" binding:"required"`
+	Price         int    `json:"price" binding:"required"`
 }
 
 func info(c *gin.Context) {
 	var s Student
-	c.BindJSON(&s)
+	if err := c.BindJSON(&s); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
 	c.JSON(http.StatusOK, gin.H{
 		"Name":    s.Name,
 		"Address": s.Address,
@@ -40,7 +46,11 @@ func info(c *gin.Context) {
 
 func bookInfo(c *gin.Context) {
 	var b Book
-	c.BindJSON(&b)
+	if err := c.BindJSON(&b); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"err": err.Error(),
+		})
+	}
 	c.JSON(http.StatusOK, gin.H{
 		"Name":          b.Name,
 		"AuthorName":    b.AuthorName,
