@@ -2,76 +2,80 @@ package main
 
 import (
 	"log"
-	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/sidz111/gin-practice1/controller"
 )
 
-func hello(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{
-		"msg": "Hello world",
-	})
-}
+// func hello(c *gin.Context) {
+// 	c.JSON(http.StatusOK, gin.H{
+// 		"msg": "Hello world",
+// 	})
+// }
 
-type Student struct {
-	Name    string  `json:"name" binding:"required"`
-	Address string  `json:"address"`
-	Contact string  `json:"contact"`
-	Marks   float32 `json:"marks"`
-}
+// type Student struct {
+// 	Name    string  `json:"name" binding:"required"`
+// 	Address string  `json:"address"`
+// 	Contact string  `json:"contact"`
+// 	Marks   float32 `json:"marks"`
+// }
 
-type Book struct {
-	Name          string `json:"name" binding:"required"`
-	AuthorName    string `json:"author_name" binding:"required"`
-	PublishedYear string `json:"published_year" binding:"required"`
-	Price         int    `json:"price" binding:"required"`
-}
+// type Book struct {
+// 	Name          string `json:"name" binding:"required"`
+// 	AuthorName    string `json:"author_name" binding:"required"`
+// 	PublishedYear string `json:"published_year" binding:"required"`
+// 	Price         int    `json:"price" binding:"required"`
+// }
 
-func info(c *gin.Context) {
-	var s Student
-	if err := c.BindJSON(&s); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": err.Error(),
-		})
-		return
-	}
+// func info(c *gin.Context) {
+// 	var s Student
+// 	if err := c.BindJSON(&s); err != nil {
+// 		c.JSON(http.StatusBadRequest, gin.H{
+// 			"error": err.Error(),
+// 		})
+// 		return
+// 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"Name":    s.Name,
-		"Address": s.Address,
-		"Contact": s.Contact,
-		"Marks":   s.Marks,
-	})
-}
+// 	c.JSON(http.StatusOK, gin.H{
+// 		"Name":    s.Name,
+// 		"Address": s.Address,
+// 		"Contact": s.Contact,
+// 		"Marks":   s.Marks,
+// 	})
+// }
 
-func bookInfo(c *gin.Context) {
-	var b Book
-	if err := c.BindJSON(&b); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"err": err.Error(),
-		})
-	}
-	c.JSON(http.StatusOK, gin.H{
-		"Name":          b.Name,
-		"AuthorName":    b.AuthorName,
-		"PublishedYear": b.PublishedYear,
-		"Price":         b.Price,
-	})
-}
+// func bookInfo(c *gin.Context) {
+// 	var b Book
+// 	if err := c.BindJSON(&b); err != nil {
+// 		c.JSON(http.StatusBadRequest, gin.H{
+// 			"err": err.Error(),
+// 		})
+// 	}
+// 	c.JSON(http.StatusOK, gin.H{
+// 		"Name":          b.Name,
+// 		"AuthorName":    b.AuthorName,
+// 		"PublishedYear": b.PublishedYear,
+// 		"Price":         b.Price,
+// 	})
+// }
 
 func main() {
 	r := gin.Default()
 
-	r.GET("/new/:id", func(c *gin.Context) {
-		id := c.Param("id")
-		c.JSON(http.StatusOK, gin.H{
-			"id": id,
-		})
-	})
+	// r.GET("/new/:id", func(c *gin.Context) {
+	// 	id := c.Param("id")
+	// 	c.JSON(http.StatusOK, gin.H{
+	// 		"id": id,
+	// 	})
+	// })
 
-	r.GET("/hello", hello)
-	r.POST("/info", info)
-	r.POST("/book", bookInfo)
+	// r.GET("/hello", hello)
+	// r.POST("/info", info)
+	// r.POST("/book", bookInfo)
+
+	notesController := &controller.NoteController{}
+	notesController.InitNotesControllerRoutes(r)
+
 	if err := r.Run(":9090"); err != nil {
 		log.Fatalf("failed to run server: %v", err)
 	}
